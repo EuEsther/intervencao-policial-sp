@@ -16,8 +16,8 @@ ___
 
 1. Clone o repositório:
     ```bash
-    git clone https://github.com/EuEsther/portfolio.git
-    cd portfolio/analise-vendas
+    git clone https://github.com/EuEsther/intervencao-policial-sp.git
+    cd intervencao-policial-sp
 
 2. Crie um ambiente virtual (opcional, mas recomendado):
     ```bash
