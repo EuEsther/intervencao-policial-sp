@@ -1,14 +1,18 @@
 # Sistema de Análise de Intervenções Policiais em SP
 
 Este projeto visa analisar e gerar dados relacionados a intervenções policiais no estado de São Paulo, utilizando dados fictícios para simulação e testes. A partir de dados gerados, o sistema permite realizar análises e criar relatórios sobre o impacto das ações policiais.
+___
+
+## 🗃️ Dados utilizados neste projeto
+- [Portal de Dados Abertos da SSP-SP](https://www.ssp.sp.gov.br/estatistica/consultas)
 
 ## ⚙️ Funcionalidades
 
-- Geração de Dados Fictícios: Utiliza o pacote Faker para criar dados simulados sobre intervenções policiais, incluindo informações sobre ocorrências e inquéritos.
-- CSV Limpo: Geração de um arquivo CSV limpo contendo dados fictícios prontos para análise.
-- Dependências: Contém todas as dependências necessárias para rodar o projeto, incluindo bibliotecas como Pandas, SQLAlchemy e Faker.
+- Geração de Dados Fictícios com Faker, simulando ocorrências e inquéritos policiais.
+- CSV Limpo gerado automaticamente, pronto para análises e visualizações.
+- Script SQL para criação do banco de dados com tabelas como Polícia, Ocorrência, Inquérito, etc.
 
-## 🚀 Instalação
+## 🚀 Como Rodar o Projeto
 
 1. Clone o repositório:
     ```bash
@@ -29,13 +33,13 @@ Este projeto visa analisar e gerar dados relacionados a intervenções policiais
     ```bash
     python scripts/gerar_csv_limpo.py
 
-5. Para criar o esquema do banco de dados, execute o script SQL schema.sql no seu banco de dados preferido (exemplo: MySQL, PostgreSQL ou SQLite).
+5. Para criar o esquema do banco de dados, execute o script SQL `create-database.sql` no seu banco de dados preferido (exemplo: MySQL, PostgreSQL ou SQLite).
 
 ## 🛠️ Tecnologias 
 
-- Python: Linguagem de programação principal.
-- Pandas: Para manipulação e análise de dados.
-- Faker: Para geração de dados fictícios.
+- Python: linguagem principal
+- Pandas: manipulação de dados
+- Faker: geração de dados fictícios
 
 ## 🤝 Contribuições
 
@@ -44,5 +48,5 @@ ___
 
 ### 📜 Licença
 
-Este projeto está licenciado sob a [MIT License](LICENSE). Consulte o arquivo `LICENSE` para mais detalhes.
+Distribuído sob a [MIT License](LICENSE). Use, modifique e compartilhe como quiser.
 
