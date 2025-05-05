@@ -10,6 +10,11 @@ fake = Faker("pt_BR")
 caminho_excel = os.path.join(os.path.dirname(__file__), "..", "data", "MDIP_2025.xlsx")
 df = pd.read_excel(caminho_excel)
 
+df.drop(
+    columns=[col for col in ["LONGITUDE", "LATITUDE"] if col in df.columns],
+    inplace=True,
+)
+
 
 # Função auxiliar para adicionar coluna com valores fictícios se ela não existir
 def adicionar_coluna(coluna, gerador):
@@ -131,15 +136,21 @@ adicionar_coluna("papel", lambda: random.choice(['vítima', 'suspeito', 'testemu
 adicionar_coluna("data_historico", lambda: fake.date_this_decade())
 adicionar_coluna("sentenca", lambda: random.choice(['condenado', 'absolvido', 'aguardando julgamento']))
 
+# converter datas
+colunas_data = [
+    "data_historico",
+    "data_conclusao",
+    "data_inicio"
+]
+for col in colunas_data:
+    if col in df.columns:
+        df[col] = pd.to_datetime(df[col]).dt.date
 
-df.drop(
-    columns=[col for col in ["longitude", "latitude"] if col in df.columns],
-    inplace=True,
-)
+
+df.fillna("NAO_INFORMADO", inplace=True)
+
 df.columns = [col.upper() for col in df.columns]
 
-df.fillna("DADO_NAO_INFORMADO", inplace=True)
-
 caminho_saida = os.path.join(os.path.dirname(__file__), "..", "data", "MDIP_2025_tratado.csv")
-df.to_csv(caminho_saida, index=False, encoding="utf-8-sig", sep=",")
+df.to_csv(caminho_saida, index=False, encoding="utf-8-sig")
 print(f"Arquivo CSV gerado: {caminho_saida}")
