@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS Endereco (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     cep VARCHAR(9) NOT NULL,
     logradouro VARCHAR(100) NOT NULL,
-    numero VARCHAR(10) NOT NULL,
+    numero VARCHAR(40) NOT NULL,
     bairro VARCHAR(50) NOT NULL,
     estado VARCHAR(2) NOT NULL,
     cidade VARCHAR(50) NOT NULL,
@@ -60,9 +60,9 @@ CREATE TABLE IF NOT EXISTS Pessoa (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     data_nascimento DATE NOT NULL,
-    genero VARCHAR(20) NOT NULL CHECK (genero IN ('masculino', 'feminino', 'outro')),
+    genero VARCHAR(20),
     profissao VARCHAR(50) NOT NULL,
-    cor_pele VARCHAR(20) CHECK (cor_pele IN ('Branca', 'Negra', 'Parda', 'Amarela', 'Indígena'))
+    cor_pele VARCHAR(20)
 );
 
 -- Tabela Ocorrencia
@@ -118,3 +118,8 @@ CREATE TABLE IF NOT EXISTS Pessoa_Historico (
     FOREIGN KEY (pessoa_id) REFERENCES Pessoa(ID),
     FOREIGN KEY (tipo_crime_id) REFERENCES Tipo_Crime(ID)
 );
+
+-- ALTER TABLE delegacia MODIFY endereco_id INT NULL;
+/*ADD CONSTRAINT endereco_id
+FOREIGN KEY (endereco_id) 
+REFERENCES endereco(id);*/
