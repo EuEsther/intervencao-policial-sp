@@ -22,7 +22,7 @@ select * from pessoa limit 10;
 select * from policial limit 10;
 select * from delegacia limit 10;
 select * from pessoa_historico limit 10;
-select * from ocorrencia limit 10;
+select * from ocorrencia;
 
 select data_nascimento_pessoa from planilha;
 SELECT logradouro, cidade, COUNT(*) FROM endereco GROUP BY logradouro, cidade HAVING COUNT(*) > 1;
