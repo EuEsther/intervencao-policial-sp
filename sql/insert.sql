@@ -105,3 +105,5 @@ INNER JOIN inquerito i ON
 INNER JOIN delegacia d ON
 	d.seccional = pl.SECCIONAL_CIRCUNSCRICAO;
 
+select * from ocorrencia;
+select * from delegacia limit 1000;

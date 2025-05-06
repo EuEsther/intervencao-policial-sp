@@ -15,6 +15,22 @@ df.drop(
     inplace=True,
 )
 
+# Converter DATA_FATO pra datetime
+df["DATA_FATO"] = pd.to_datetime(df["DATA_FATO"], errors="coerce")
+
+# Converter HORA_FATO pra datetime, e extrair só a hora
+df["HORA_FATO"] = pd.to_datetime(
+    df["HORA_FATO"], format="%H:%M:%S", errors="coerce"
+).dt.time
+
+df["data_hora_fato_ocorrencia"] = df.apply(
+    lambda row: (
+        pd.Timestamp.combine(row["DATA_FATO"].date(), row["HORA_FATO"])
+        if pd.notnull(row["DATA_FATO"]) and pd.notnull(row["HORA_FATO"])
+        else pd.NaT
+    ),
+    axis=1,
+)
 
 # Função auxiliar para adicionar coluna com valores fictícios se ela não existir
 def adicionar_coluna(coluna, gerador):
@@ -123,7 +139,6 @@ adicionar_coluna(
 adicionar_coluna("descricao_crime", lambda: fake.sentence(nb_words=20))
 
 # ocorrencia
-adicionar_coluna("data_hora_fato_ocorrencia", lambda: fake.date_time_this_decade())
 adicionar_coluna(
     "status_ocorrencia",
     lambda: random.choice(["em_analise", "encerrada", "em_andamento"])
@@ -146,11 +161,10 @@ for col in colunas_data:
     if col in df.columns:
         df[col] = pd.to_datetime(df[col]).dt.date
 
-
 df.fillna("NAO_INFORMADO", inplace=True)
 
 df.columns = [col.upper() for col in df.columns]
 
-caminho_saida = os.path.join(os.path.dirname(__file__), "..", "data", "MDIP_2025_tratado.csv")
-df.to_csv(caminho_saida, index=False, encoding="utf-8-sig")
+caminho_saida = os.path.join(os.path.dirname(__file__), "..", "data", "MDIP_2025_tratado.xlsx")
+df.to_excel(caminho_saida, index=False, engine="openpyxl")
 print(f"Arquivo CSV gerado: {caminho_saida}")
