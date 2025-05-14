@@ -51,6 +51,8 @@ SELECT DISTINCT
     END
 FROM planilha;
 
+
+
 -- tbEndereco
 INSERT INTO endereco
 (cep, logradouro, numero, bairro, estado, cidade, zona)
@@ -82,7 +84,7 @@ SELECT DISTINCT
     CASE 
         WHEN data_conclusao = 'NAO_INFORMADO' OR data_conclusao = '' THEN '01/01/1900'
         WHEN data_conclusao LIKE '%-%-%' THEN STR_TO_DATE(data_conclusao, '%Y-%m-%d')  -- Se estiver no formato YYYY-MM-DD
-        ELSE STR_TO_DATE(data_conclusao, '%d/%m/%Y')  -- Caso contrário, assume o formato DD/MM/YYYY
+        ELSE STR_TO_DATE(data_conclusao, '%d/%m/%Y')  -- Caso contrário, assume o formato MM/DD/YYYY
     END,
 
     CASE 
@@ -90,6 +92,8 @@ SELECT DISTINCT
         ELSE observacoes
     END
 FROM planilha;
+
+
 
 -- tbPolicial
 INSERT INTO policial
@@ -100,7 +104,7 @@ FROM planilha;
 
 -- tbPessoaHistorico erro    
 INSERT INTO pessoa_historico (
-    pessoa_id, 
+	pessoa_id, 
     tipo_crime_id, 
     data, 
     sentenca
@@ -109,73 +113,20 @@ SELECT DISTINCT
     p.id,
     tc.id,
     CASE 
-        WHEN pl.data_historico IS NULL 
-             OR TRIM(pl.data_historico) = '' 
-             OR pl.data_historico = 'NAO_INFORMADO'
-        THEN '1900-01-01'
-        WHEN pl.data_historico REGEXP '^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$'
-        THEN STR_TO_DATE(pl.data_historico, '%d/%m/%Y')
-        WHEN pl.data_historico REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
-        THEN pl.data_historico
-        ELSE '1900-01-01'
-    END AS data_formatada,
+        WHEN pl.data_historico = 'NAO_INFORMADO' OR pl.data_historico = '' THEN '1900-01-01'
+        WHEN pl.data_historico LIKE '%/%/%' THEN STR_TO_DATE(pl.data_historico, '%d/%m/%Y') -- Formato MM/DD/YYYY
+        WHEN pl.data_historico LIKE '%-%-%' THEN STR_TO_DATE(pl.data_historico, '%Y-%m-%d') -- Formato YYYY-MM-DD
+        ELSE '1900-01-01' -- Data padrão caso o formato não seja reconhecido
+    END,
     pl.sentenca
 FROM planilha pl
-JOIN pessoa p ON p.nome = pl.nome_vitima
-JOIN tipo_crime tc ON tc.artigo = pl.artigo_crime
-LIMIT 3010 OFFSET 0;
+INNER JOIN pessoa p ON 
+    p.nome = pl.nome_vitima
+INNER JOIN tipo_crime tc ON 
+    tc.artigo = pl.artigo_crime
+-- LIMIT 3010 OFFSET 0
+LIMIT 6050 OFFSET 3010;
 
-INSERT INTO pessoa_historico (
-    pessoa_id, 
-    tipo_crime_id, 
-    data, 
-    sentenca
-)
-SELECT DISTINCT
-    p.id,
-    tc.id,
-    CASE 
-        WHEN pl.data_historico IS NULL 
-             OR TRIM(pl.data_historico) = '' 
-             OR pl.data_historico = 'NAO_INFORMADO'
-        THEN '1900-01-01'
-        WHEN pl.data_historico REGEXP '^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$'
-        THEN STR_TO_DATE(pl.data_historico, '%d/%m/%Y')
-        WHEN pl.data_historico REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
-        THEN pl.data_historico
-        ELSE '1900-01-01'
-    END AS data_formatada,
-    pl.sentenca
-FROM planilha pl
-JOIN pessoa p ON p.nome = pl.nome_vitima
-JOIN tipo_crime tc ON tc.artigo = pl.artigo_crime
-LIMIT 3010 OFFSET 3010;
-
-INSERT INTO pessoa_historico (
-    pessoa_id, 
-    tipo_crime_id, 
-    data, 
-    sentenca
-)
-SELECT DISTINCT
-    p.id,
-    tc.id,
-    CASE 
-        WHEN pl.data_historico IS NULL 
-             OR TRIM(pl.data_historico) = '' 
-             OR pl.data_historico = 'NAO_INFORMADO'
-        THEN '1900-01-01'
-        WHEN pl.data_historico REGEXP '^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$'
-        THEN STR_TO_DATE(pl.data_historico, '%d/%m/%Y')
-        WHEN pl.data_historico REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
-        THEN pl.data_historico
-        ELSE '1900-01-01'
-    END AS data_formatada,
-    pl.sentenca
-FROM planilha pl
-JOIN pessoa p ON p.nome = pl.nome_vitima
-JOIN tipo_crime tc ON tc.artigo = pl.artigo_crime
-LIMIT 3010 OFFSET 6020;
 
 -- tbDelegacia
 INSERT INTO delegacia (endereco_id, seccional)
@@ -202,17 +153,10 @@ INSERT INTO ocorrencia (
 )
 SELECT DISTINCT
     CASE 
-        WHEN pl.data_hora_fato_ocorrencia = 'NAO_INFORMADO' 
-             OR pl.data_hora_fato_ocorrencia = '' 
-        THEN '1900-01-01 00:00:00'
-        
-        WHEN pl.data_hora_fato_ocorrencia REGEXP '^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}$'
-        THEN STR_TO_DATE(pl.data_hora_fato_ocorrencia, '%d/%m/%Y %H:%i:%s')
-
-        WHEN pl.data_hora_fato_ocorrencia REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$'
-        THEN pl.data_hora_fato_ocorrencia
-
-        ELSE '1900-01-01 00:00:00'
+        WHEN pl.data_hora_fato_ocorrencia = 'NAO_INFORMADO' OR pl.data_hora_fato_ocorrencia = '' THEN '1900-01-01 00:00:00'
+        WHEN pl.data_hora_fato_ocorrencia LIKE '%/%/%' THEN STR_TO_DATE(pl.data_hora_fato_ocorrencia, '%d/%m/%Y %H:%i:%s') -- Caso o formato seja MM/DD/YYYY HH:MM:SS
+        WHEN pl.data_hora_fato_ocorrencia LIKE '%-%-%' THEN STR_TO_DATE(pl.data_hora_fato_ocorrencia, '%Y-%m-%d %H:%i:%s') -- Caso a data esteja no formato YYYY-MM-DD HH:MM:SS
+        ELSE '1900-01-01 00:00:00' -- Data padrão para casos não identificados ou inválidos
     END AS data_hora_fato,
     status_ocorrencia, 
     e.id AS endereco_id, 
@@ -220,46 +164,19 @@ SELECT DISTINCT
     d.id AS delegacia_id
 FROM planilha pl
 INNER JOIN endereco e ON
-    e.cep = pl.cep
+    e.cep = pl.cep AND
+    e.logradouro = pl.logradouro AND
+    e.numero = pl.numero_logradouro AND
+    e.bairro = pl.bairro AND
+    e.estado = pl.estado AND
+    e.cidade = pl.cidade AND
+    e.zona = pl.zona
 INNER JOIN inquerito i ON
     i.numero_inquerito = pl.numero_inquerito
 INNER JOIN delegacia d ON
     d.seccional = pl.SECCIONAL_CIRCUNSCRICAO
-LIMIT 3010 OFFSET 0;
-
-INSERT INTO ocorrencia (
-    data_hora_fato, 
-    status_ocorrencia, 
-    endereco_id, 
-    inquerito_id, 
-    delegacia_id
-)
-SELECT DISTINCT
-    CASE 
-        WHEN pl.data_hora_fato_ocorrencia = 'NAO_INFORMADO' 
-             OR pl.data_hora_fato_ocorrencia = '' 
-        THEN '1900-01-01 00:00:00'
-        
-        WHEN pl.data_hora_fato_ocorrencia REGEXP '^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}$'
-        THEN STR_TO_DATE(pl.data_hora_fato_ocorrencia, '%d/%m/%Y %H:%i:%s')
-
-        WHEN pl.data_hora_fato_ocorrencia REGEXP '^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$'
-        THEN pl.data_hora_fato_ocorrencia
-
-        ELSE '1900-01-01 00:00:00'
-    END AS data_hora_fato,
-    status_ocorrencia, 
-    e.id AS endereco_id, 
-    i.id AS inquerito_id, 
-    d.id AS delegacia_id
-FROM planilha pl
-INNER JOIN endereco e ON
-    e.cep = pl.cep
-INNER JOIN inquerito i ON
-    i.numero_inquerito = pl.numero_inquerito
-INNER JOIN delegacia d ON
-    d.seccional = pl.SECCIONAL_CIRCUNSCRICAO
-LIMIT 6100 OFFSET 3010;
+-- LIMIT 3010 OFFSET 0;
+LIMIT 6050 OFFSET 3010;
     
 -- tabela ocorrencia_pessoa
 INSERT INTO ocorrencia_pessoa (
@@ -277,8 +194,7 @@ INNER JOIN pessoa p ON
 INNER JOIN inquerito i ON 
     i.numero_inquerito = pl.numero_inquerito
 INNER JOIN ocorrencia o ON 
-    o.inquerito_id = i.id
-LIMIT 10 OFFSET 0;
+    o.inquerito_id = i.id;
     
 -- tabela ocorrencia_tipo_crime
 INSERT INTO ocorrencia_tipo_crime (
@@ -295,9 +211,26 @@ INNER JOIN inquerito i ON
     i.numero_inquerito = pl.numero_inquerito
 INNER JOIN ocorrencia o ON 
     o.inquerito_id = i.id
-LIMIT 10 OFFSET 0;
+-- LIMIT 3010 OFFSET 0;
+LIMIT 6050 OFFSET 3010;
 
--- tabela ocorrencia_policial
+-- tabela ocorrecia_tipo_ocorrencia
+INSERT INTO ocorrencia_tipo_ocorrencia (
+    ocorrencia_id, 
+    tipo_ocorrencia_id
+)
+SELECT DISTINCT
+    o.id,
+    tp.id
+FROM planilha pl
+INNER JOIN tipo_ocorrencia tp ON 
+    tp.descricao = pl.descricao_crime
+INNER JOIN inquerito i ON 
+    i.numero_inquerito = pl.numero_inquerito
+INNER JOIN ocorrencia o ON 
+    o.inquerito_id = i.id;
+    
+-- tabela ocorrencia_policial    
 INSERT INTO ocorrencia_policial (
     ocorrencia_id, 
     policial_id
@@ -312,5 +245,3 @@ INNER JOIN inquerito i ON
     i.numero_inquerito = pl.numero_inquerito
 INNER JOIN ocorrencia o ON 
     o.inquerito_id = i.id;
-    
-
