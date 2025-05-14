@@ -1,10 +1,11 @@
 CREATE DATABASE IF NOT EXISTS policial_intervencao;
 USE policial_intervencao;
 
+
 -- Tabela Tipo_Ocorrencia
 CREATE TABLE IF NOT EXISTS Tipo_Ocorrencia (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    descricao VARCHAR(100) NOT NULL
+    descricao VARCHAR(255) NOT NULL
 );
 
 -- Tabela Policial
@@ -68,13 +69,11 @@ CREATE TABLE IF NOT EXISTS Pessoa (
 -- Tabela Ocorrencia
 CREATE TABLE IF NOT EXISTS Ocorrencia (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    data_hora_fato TIMESTAMP NOT NULL,
+    data_hora_fato DATETIME NOT NULL,
     status_ocorrencia VARCHAR(30) NOT NULL CHECK (status_ocorrencia IN ('em_analise', 'encerrada', 'em_andamento')),
-    policial_id INT NOT NULL,
     endereco_id INT NOT NULL,
     inquerito_id INT,
     delegacia_id INT NOT NULL,
-    FOREIGN KEY (policial_id) REFERENCES Policial(ID),
     FOREIGN KEY (endereco_id) REFERENCES Endereco(ID),
     FOREIGN KEY (inquerito_id) REFERENCES Inquerito(ID),
     FOREIGN KEY (delegacia_id) REFERENCES Delegacia(ID)
@@ -119,7 +118,11 @@ CREATE TABLE IF NOT EXISTS Pessoa_Historico (
     FOREIGN KEY (tipo_crime_id) REFERENCES Tipo_Crime(ID)
 );
 
--- ALTER TABLE delegacia MODIFY endereco_id INT NULL;
-/*ADD CONSTRAINT endereco_id
-FOREIGN KEY (endereco_id) 
-REFERENCES endereco(id);*/
+-- Tabela Ocorrencia_Tipo_Crime
+CREATE TABLE IF NOT EXISTS Ocorrencia_Policial (
+    ocorrencia_id INT NOT NULL,
+    policial_id INT NOT NULL,
+    PRIMARY KEY (ocorrencia_id, policial_id),
+    FOREIGN KEY (ocorrencia_id) REFERENCES Ocorrencia(ID),
+    FOREIGN KEY (policial_id) REFERENCES Policial(ID)
+);
