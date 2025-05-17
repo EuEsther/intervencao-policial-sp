@@ -29,6 +29,7 @@ select * from ocorrencia limit 10;
 select * from ocorrencia_pessoa limit 10;
 select * from ocorrencia_tipo_crime limit 10;
 select * from ocorrencia_tipo_ocorrencia limit 10;
+select * from ocorrencia_policial limit 10;
 
 
 
