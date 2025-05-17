@@ -78,13 +78,13 @@ SELECT DISTINCT
     CASE 
         WHEN data_inicio = 'NAO_INFORMADO' OR data_inicio = '' THEN '01/01/1900'
         WHEN data_inicio LIKE '%-%-%' THEN STR_TO_DATE(data_inicio, '%Y-%m-%d')  -- Se estiver no formato YYYY-MM-DD
-        ELSE STR_TO_DATE(data_inicio, '%d/%m/%Y')  -- Caso contrário, assume o formato MM/DD/YYYY
+        ELSE STR_TO_DATE(data_inicio, '%d/%m/%Y')  -- Caso contrário, assume o formato DD/MM/YYYY
     END,
     
     CASE 
         WHEN data_conclusao = 'NAO_INFORMADO' OR data_conclusao = '' THEN '01/01/1900'
         WHEN data_conclusao LIKE '%-%-%' THEN STR_TO_DATE(data_conclusao, '%Y-%m-%d')  -- Se estiver no formato YYYY-MM-DD
-        ELSE STR_TO_DATE(data_conclusao, '%d/%m/%Y')  -- Caso contrário, assume o formato MM/DD/YYYY
+        ELSE STR_TO_DATE(data_conclusao, '%d/%m/%Y')  -- Caso contrário, assume o formato DD/MM/YYYY
     END,
 
     CASE 
@@ -114,7 +114,7 @@ SELECT DISTINCT
     tc.id,
     CASE 
         WHEN pl.data_historico = 'NAO_INFORMADO' OR pl.data_historico = '' THEN '1900-01-01'
-        WHEN pl.data_historico LIKE '%/%/%' THEN STR_TO_DATE(pl.data_historico, '%d/%m/%Y') -- Formato MM/DD/YYYY
+        WHEN pl.data_historico LIKE '%/%/%' THEN STR_TO_DATE(pl.data_historico, '%d/%m/%Y') -- Formato DD/MM/YYYY
         WHEN pl.data_historico LIKE '%-%-%' THEN STR_TO_DATE(pl.data_historico, '%Y-%m-%d') -- Formato YYYY-MM-DD
         ELSE '1900-01-01' -- Data padrão caso o formato não seja reconhecido
     END,
@@ -154,7 +154,7 @@ INSERT INTO ocorrencia (
 SELECT DISTINCT
     CASE 
         WHEN pl.data_hora_fato_ocorrencia = 'NAO_INFORMADO' OR pl.data_hora_fato_ocorrencia = '' THEN '1900-01-01 00:00:00'
-        WHEN pl.data_hora_fato_ocorrencia LIKE '%/%/%' THEN STR_TO_DATE(pl.data_hora_fato_ocorrencia, '%d/%m/%Y %H:%i:%s') -- Caso o formato seja MM/DD/YYYY HH:MM:SS
+        WHEN pl.data_hora_fato_ocorrencia LIKE '%/%/%' THEN STR_TO_DATE(pl.data_hora_fato_ocorrencia, '%d/%m/%Y %H:%i:%s') -- Caso o formato seja DD/MM/YYYY HH:MM:SS
         WHEN pl.data_hora_fato_ocorrencia LIKE '%-%-%' THEN STR_TO_DATE(pl.data_hora_fato_ocorrencia, '%Y-%m-%d %H:%i:%s') -- Caso a data esteja no formato YYYY-MM-DD HH:MM:SS
         ELSE '1900-01-01 00:00:00' -- Data padrão para casos não identificados ou inválidos
     END AS data_hora_fato,
