@@ -1,20 +1,20 @@
 USE policial_intervencao;
 
--- tbTipoCrime
+-- tbTipoCrime, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario)
 INSERT INTO tipo_crime
 (artigo, descricao)
 SELECT DISTINCT
 artigo_crime, descricao_crime
 FROM planilha;
 
--- tbTipoOcorrencia
+-- tbTipoOcorrencia, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario)
 INSERT INTO tipo_ocorrencia
 (descricao)
 SELECT DISTINCT
 descricao_crime
 FROM planilha;
 
--- tbPessoa
+-- tbPessoa, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario)
 INSERT INTO pessoa (
     nome, 
     data_nascimento, 
@@ -53,14 +53,14 @@ FROM planilha;
 
 
 
--- tbEndereco
+-- tbEndereco, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario)
 INSERT INTO endereco
 (cep, logradouro, numero, bairro, estado, cidade, zona)
 SELECT DISTINCT
 cep, logradouro, numero_logradouro, bairro, estado, cidade, zona
 FROM planilha;
 
--- tbInquerito
+-- tbInquerito, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario)
 INSERT INTO inquerito (
     numero_inquerito, 
     status, 
@@ -95,14 +95,14 @@ FROM planilha;
 
 
 
--- tbPolicial
+-- tbPolicial, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario)
 INSERT INTO policial
 (nome, matricula, departamento, cargo, status_servico, status_aposentadoria)
 SELECT DISTINCT
 nome_policial, matricula_policial, departamento_policial, cargo_policial, status_servico, status_aposentadoria
 FROM planilha;
 
--- tbPessoaHistorico erro    
+-- tbPessoaHistorico erro, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario)
 INSERT INTO pessoa_historico (
 	pessoa_id, 
     tipo_crime_id, 
@@ -124,11 +124,11 @@ INNER JOIN pessoa p ON
     p.nome = pl.nome_vitima
 INNER JOIN tipo_crime tc ON 
     tc.artigo = pl.artigo_crime
--- LIMIT 3010 OFFSET 0
+-- LIMIT 3010 OFFSET 0;
 LIMIT 6050 OFFSET 3010;
 
 
--- tbDelegacia
+-- tbDelegacia, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario)
 INSERT INTO delegacia (endereco_id, seccional)
 SELECT DISTINCT
   e.id,
@@ -143,7 +143,7 @@ INNER JOIN endereco e ON
     e.cidade = pl.cidade AND
     e.zona = pl.zona;
 
--- tbOcorrecia
+-- tbOcorrecia, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario)
 INSERT INTO ocorrencia (
     data_hora_fato, 
     status_ocorrencia, 
@@ -178,7 +178,7 @@ INNER JOIN delegacia d ON
 -- LIMIT 3010 OFFSET 0;
 LIMIT 6050 OFFSET 3010;
     
--- tabela ocorrencia_pessoa
+-- tabela ocorrencia_pessoa, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario)
 INSERT INTO ocorrencia_pessoa (
     ocorrencia_id, 
     pessoa_id, 
@@ -196,7 +196,7 @@ INNER JOIN inquerito i ON
 INNER JOIN ocorrencia o ON 
     o.inquerito_id = i.id;
     
--- tabela ocorrencia_tipo_crime
+-- tabela ocorrencia_tipo_crime, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario)
 INSERT INTO ocorrencia_tipo_crime (
     ocorrencia_id, 
     tipo_crime_id
@@ -210,11 +210,11 @@ INNER JOIN tipo_crime tc ON
 INNER JOIN inquerito i ON 
     i.numero_inquerito = pl.numero_inquerito
 INNER JOIN ocorrencia o ON 
-    o.inquerito_id = i.id
+    o.inquerito_id = i.id;
 -- LIMIT 3010 OFFSET 0;
-LIMIT 6050 OFFSET 3010;
+-- LIMIT 6050 OFFSET 3010;
 
--- tabela ocorrecia_tipo_ocorrencia
+-- tabela ocorrecia_tipo_ocorrencia, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario)
 INSERT INTO ocorrencia_tipo_ocorrencia (
     ocorrencia_id, 
     tipo_ocorrencia_id
@@ -230,7 +230,7 @@ INNER JOIN inquerito i ON
 INNER JOIN ocorrencia o ON 
     o.inquerito_id = i.id;
     
--- tabela ocorrencia_policial    
+-- tabela ocorrencia_policial, rodar LIMIT 3010 OFFSET 0 e LIMIT 6050 OFFSET 3010 (se necessario) 
 INSERT INTO ocorrencia_policial (
     ocorrencia_id, 
     policial_id
